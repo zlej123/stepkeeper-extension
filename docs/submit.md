@@ -52,32 +52,21 @@ python pack.py                 # → dist/stepkeeper-extension-0.2.0.zip
 
 ## 3. 스크린샷
 
-**바로 쓸 수 있는 스크린샷이 준비돼 있다: [`docs/store/screenshot-1280x800.png`](store/screenshot-1280x800.png)**
+**바로 쓸 수 있는 스크린샷이 준비돼 있다: [`docs/store/screenshot-1280x800.png`](store/screenshot-1280x800.png)** (한국어판: `screenshot-1280x800.ko.png`)
 
-실제 패널 CSS(`content.css`) + 코어의 실제 캡처 프레임(`stepkeeper/docs/demo/`)으로 만든 충실한
-홍보용 합성 이미지다(라이브 캡처가 아니라 조립본 — UI·프레임·문구는 전부 진짜). 그대로 업로드해도 되고,
-소스는 `docs/store/screenshot.html`이라 문구를 바꿔 재생성할 수 있다:
+실제 패널 CSS(`content.css`)와 코어가 실제로 뽑은 후보 프레임으로 조립한 홍보용 이미지다
+(라이브 캡처가 아니라 조립본 — UI·프레임·문구는 전부 진짜). 영상·문구를 바꾸려면 파이프라인을
+한 번 돌린 뒤 그 산출물로 재생성한다:
 
 ```bash
-"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --disable-gpu \
-  --force-device-scale-factor=1 --window-size=1280,800 \
-  --screenshot=docs/store/screenshot-1280x800.png "file://$PWD/docs/store/screenshot.html"
+# 1) 후보 프레임 생성 (코어 레포에서, GEMINI_API_KEY 필요)
+stepkeeper "<youtube-url>" --profile recipe --language en --auto-pick
+
+# 2) 그 산출물로 스크린샷 조립 (확장 레포에서)
+python3 docs/store/make_screenshot.py \
+    <data>/work/frames/<video-id>/recipe.en \
+    <data>/work/analyses/<video-id>/recipe.en.json --lang en
 ```
-
-### 라이브 캡처로 바꾸고 싶다면 (선택)
-
-최대한 진짜에 가깝게 하려면 확장을 로컬 크롬에 로드해서 실제 화면을 찍는다.
-
-1. `chrome://extensions` → 우상단 **개발자 모드** 켜기
-2. **압축해제된 확장 프로그램을 로드** → `~/dev/stepkeeper-extension` 폴더 선택
-3. 확장 옵션에서 Gemini 키 입력 (aistudio.google.com/apikey, 무료)
-4. 유튜브 how-to 영상 열기 (store-listing.md 추천: 매듭 영상 `Q9NqGd7464U`) → 잠깐 재생
-5. 우하단 **stepkeeper 버튼** 클릭 → 분석 → **가이드별 3후보 썸네일 패널이 뜬 상태**에서 스크린샷
-6. **1280×800**으로 크기 맞추기 (macOS: 미리보기 앱에서 도구 → 크기 조정, 또는 그 해상도로 크롭)
-
-좋은 스크린샷 = 패널에 가이드 문구 + 후보 3장이 또렷이 보이는 화면. 이게 제품 가치를 한눈에 보여준다.
-
----
 
 ## 4. 개인정보 탭 (Privacy practices)
 
