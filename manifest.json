@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "clipnote",
+  "name": "stepkeeper",
   "version": "0.2.0",
   "description": "Turn videos into documents, recipes, and user manuals. Ambiguous spoken steps get the actual video frame.",
   "icons": {
@@ -33,7 +33,7 @@
   ],
   "options_page": "options.html",
   "action": {
-    "default_title": "clipnote settings",
+    "default_title": "stepkeeper settings",
     "default_popup": "options.html",
     "default_icon": {
       "16": "icons/icon16.png",

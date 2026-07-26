@@ -2,7 +2,7 @@
 
 ## 기본 정보
 
-- **이름**: clipnote
+- **이름**: stepkeeper
 - **요약(짧은 설명, 132자 이내)**:
   Turn videos into documents, recipes, and user manuals. Ambiguous spoken steps get the actual video frame.
 - **카테고리**: Productivity → Tools
@@ -11,10 +11,10 @@
 ## 자세한 설명 (Description)
 
 ```
-clipnote turns a YouTube how-to video into a follow-along document.
+stepkeeper turns a YouTube how-to video into a follow-along document.
 
 Spoken instructions like "cut it bite-sized" or "simmer until the sauce
-reduces" don't mean much as text. clipnote finds the moment where that state
+reduces" don't mean much as text. stepkeeper finds the moment where that state
 is actually visible, captures candidate frames directly from the player, lets
 you pick the right one, and builds a markdown document with the frames
 embedded.
@@ -29,7 +29,7 @@ How to use:
 1. Enter your Gemini API key in the extension options
    (free at aistudio.google.com/apikey)
 2. Open a YouTube how-to video, play it for a moment
-3. Click the clipnote button (bottom right) → pick frames → download document
+3. Click the stepkeeper button (bottom right) → pick frames → download document
 ```
 
 ## 개인정보 (Privacy practices 탭)
@@ -41,7 +41,7 @@ How to use:
   - `content script (youtube.com/watch)`: 버튼/패널 UI 표시 및 시청 중인 플레이어에서 프레임 캡처
 - **원격 코드 사용**: 없음 (No)
 - **데이터 수집**: 없음 — 개발자는 어떤 데이터도 수신하지 않음. 분석 요청은 사용자 키로 Google Gemini에 직접 전송.
-- **개인정보처리방침 URL**: https://github.com/zlej123/clipnote-extension/blob/main/PRIVACY.md
+- **개인정보처리방침 URL**: https://github.com/zlej123/stepkeeper-extension/blob/main/PRIVACY.md
 
 ## 그래픽 자산
 
@@ -51,4 +51,4 @@ How to use:
 
 ## 업로드 파일
 
-`python pack.py` 실행 → `dist/clipnote-extension-<버전>.zip` 업로드
+`python pack.py` 실행 → `dist/stepkeeper-extension-<버전>.zip` 업로드

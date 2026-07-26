@@ -1,6 +1,6 @@
-# clipnote-extension
+# stepkeeper-extension
 
-The Chrome extension for [clipnote](https://github.com/zlej123/clipnote). On a YouTube how-to video, one click:
+The Chrome extension for [stepkeeper](https://github.com/zlej123/stepkeeper). On a YouTube how-to video, one click:
 
 1. Gemini analyzes the video into steps and visual guides (timestamps for ambiguous phrases),
 2. before/center/after candidate frames are captured from the playing player via canvas,
@@ -17,7 +17,7 @@ No server required — you bring your own Gemini key. Nothing is downloaded from
 
 ## Use
 
-On a watch page, click the **📋 clipnote** button (bottom right) → analyze → pick frames → export:
+On a watch page, click the **📋 stepkeeper** button (bottom right) → analyze → pick frames → export:
 
 - **Build document** — downloads `document.md` plus the selected images.
 - **Open in Obsidian** — creates the note directly in your vault via `obsidian://new` (no API key;
@@ -30,16 +30,16 @@ On a watch page, click the **📋 clipnote** button (bottom right) → analyze �
 - The player seeks around (muted) during capture, then returns to where you were.
 - If no candidate fits a guide, choose "unusable"; it becomes a YouTube timestamp link instead.
 
-## Via clipnote-server (optional)
+## Via stepkeeper-server (optional)
 
-Set a server URL in the options to route analysis through [clipnote-server](https://github.com/zlej123/clipnote-server) instead of calling Gemini directly. Useful for updating prompts without re-shipping the extension.
+Set a server URL in the options to route analysis through [stepkeeper-server](https://github.com/zlej123/stepkeeper-server) instead of calling Gemini directly. Useful for updating prompts without re-shipping the extension.
 
 ## skill-core assets
 
 `assets/skill-core/` is a copy of the core repo's prompts and schemas. When the core changes:
 
 ```bash
-python sync_assets.py ../clipnote
+python sync_assets.py ../stepkeeper
 ```
 
 ## Known limits

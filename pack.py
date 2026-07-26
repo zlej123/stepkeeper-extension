@@ -17,7 +17,7 @@ INCLUDE_DIRS = ["icons", "assets"]
 version = json.loads((HERE / "manifest.json").read_text(encoding="utf-8"))["version"]
 dist = HERE / "dist"
 dist.mkdir(exist_ok=True)
-target = dist / f"clipnote-extension-{version}.zip"
+target = dist / f"stepkeeper-extension-{version}.zip"
 
 with zipfile.ZipFile(target, "w", zipfile.ZIP_DEFLATED) as bundle:
     for name in INCLUDE:

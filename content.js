@@ -1,4 +1,4 @@
-// clipnote content script: 유튜브 watch 페이지에서 분석 → 프레임 캡처 → 선택 → 문서 생성.
+// stepkeeper content script: 유튜브 watch 페이지에서 분석 → 프레임 캡처 → 선택 → 문서 생성.
 (() => {
   "use strict";
 
@@ -81,7 +81,7 @@
         }
       }
     }
-    lines.push("", "---", `*출처: [${analysis.title}](https://youtu.be/${vid}) — clipnote로 생성*`, "");
+    lines.push("", "---", `*출처: [${analysis.title}](https://youtu.be/${vid}) — stepkeeper로 생성*`, "");
     return lines.join("\n");
   }
 
@@ -89,10 +89,10 @@
   function ui(html) {
     if (!panel) {
       panel = document.createElement("div");
-      panel.id = "clipnote-panel";
+      panel.id = "stepkeeper-panel";
       document.body.appendChild(panel);
     }
-    panel.innerHTML = `<div class="cn-head"><b>clipnote</b><button id="cn-close">✕</button></div>${html}`;
+    panel.innerHTML = `<div class="cn-head"><b>stepkeeper</b><button id="cn-close">✕</button></div>${html}`;
     panel.querySelector("#cn-close").onclick = () => panel.remove() || (panel = null);
   }
 
@@ -106,7 +106,7 @@
 
     ui(`<p>영상 분석 중… (${hms(duration)}, ${profile})</p>`);
     const reply = await chrome.runtime.sendMessage({
-      type: "clipnote:analyze",
+      type: "stepkeeper:analyze",
       payload: { url: `https://www.youtube.com/watch?v=${vid}`, duration, profile },
     });
     if (!reply?.ok) { ui(`<p class="cn-err">${reply?.error || "분석 실패"}</p>`); return; }
@@ -180,7 +180,7 @@
     panel.querySelector("#cn-obsidian").onclick = async () => {
       const picks = collectPicks();
       const { vault } = await chrome.storage.sync.get("vault");
-      const name = "clipnote/" + analysis.title.replace(/[\\/:*?"<>|#^\[\]]/g, " ").trim();
+      const name = "stepkeeper/" + analysis.title.replace(/[\\/:*?"<>|#^\[\]]/g, " ").trim();
       const uri = "obsidian://new?" +
         (vault ? `vault=${encodeURIComponent(vault)}&` : "") +
         `file=${encodeURIComponent(name)}&content=${encodeURIComponent(buildMarkdown(vid, analysis, picks))}`;
@@ -189,7 +189,7 @@
       anchor.click();
       const nImages = Object.values(picks).filter((s) => s !== "none").length;
       downloadImages(picks);
-      ui(`<p>Obsidian에 노트를 생성했습니다 (clipnote 폴더).${nImages
+      ui(`<p>Obsidian에 노트를 생성했습니다 (stepkeeper 폴더).${nImages
           ? `<br>이미지 ${nImages}장은 다운로드됐습니다 — 노트가 있는 폴더로 옮기면 표시됩니다.` : ""}</p>`);
     };
 
@@ -204,10 +204,10 @@
 
   // 진입 버튼
   function mountButton() {
-    if (document.getElementById("clipnote-btn")) return;
+    if (document.getElementById("stepkeeper-btn")) return;
     const button = document.createElement("button");
-    button.id = "clipnote-btn";
-    button.textContent = "📋 clipnote";
+    button.id = "stepkeeper-btn";
+    button.textContent = "📋 stepkeeper";
     button.onclick = () => run().catch((error) => ui(`<p class="cn-err">${error.message}</p>`));
     document.body.appendChild(button);
   }

@@ -1,4 +1,4 @@
-// clipnote background: Gemini 호출(직접) 또는 clipnote-server 경유.
+// stepkeeper background: Gemini 호출(직접) 또는 stepkeeper-server 경유.
 // 페이지 CORS를 피하려고 service worker에서 fetch한다.
 
 const GEMINI = "https://generativelanguage.googleapis.com/v1beta/models";
@@ -82,13 +82,13 @@ async function analyzeViaServer(payload, settings) {
   });
   if (!response.ok) {
     const detail = await response.text();
-    throw new Error(`clipnote-server 오류 (HTTP ${response.status}): ${detail.slice(0, 200)}`);
+    throw new Error(`stepkeeper-server 오류 (HTTP ${response.status}): ${detail.slice(0, 200)}`);
   }
   return (await response.json()).analysis;
 }
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-  if (message.type !== "clipnote:analyze") return false;
+  if (message.type !== "stepkeeper:analyze") return false;
   (async () => {
     const settings = Object.assign(
       { apiKey: "", language: "ko", model: "gemini-flash-lite-latest", maxGuides: 5, serverUrl: "" },

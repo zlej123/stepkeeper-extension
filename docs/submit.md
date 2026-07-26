@@ -11,14 +11,14 @@
 ## 0. 제출 전 최종 확인 (터미널)
 
 ```bash
-cd ~/dev/clipnote-extension
+cd ~/dev/stepkeeper-extension
 
 # 번들 자산이 코어와 최신인지 (프롬프트/스키마가 낡으면 분석 품질 저하)
 python sync_assets.py          # 코어에서 skill-core 재복사
 git status --short             # 변경 있으면 커밋
 
 # 업로드 zip 재생성
-python pack.py                 # → dist/clipnote-extension-0.2.0.zip
+python pack.py                 # → dist/stepkeeper-extension-0.2.0.zip
 ```
 
 버전을 올려 재제출할 때는 `manifest.json`의 `"version"`을 먼저 올리고 `pack.py`를 다시 돌린다
@@ -35,12 +35,12 @@ python pack.py                 # → dist/clipnote-extension-0.2.0.zip
 
 ## 2. 새 항목 만들기 + zip 업로드
 
-1. 대시보드 → **New Item** → `dist/clipnote-extension-0.2.0.zip` 드래그
+1. 대시보드 → **New Item** → `dist/stepkeeper-extension-0.2.0.zip` 드래그
 2. 업로드되면 아래 탭들이 열린다. store-listing.md 내용을 붙여넣는다:
 
 | 탭 | 넣을 것 (출처: store-listing.md) |
 |----|------|
-| Store listing → 이름 | `clipnote` |
+| Store listing → 이름 | `stepkeeper` |
 | Store listing → 요약 | "Turn how-to YouTube videos into documents…" (132자 이내 문안) |
 | Store listing → 설명 | "자세한 설명" 코드블록 전체 |
 | Store listing → 카테고리 | Productivity |
@@ -54,7 +54,7 @@ python pack.py                 # → dist/clipnote-extension-0.2.0.zip
 
 **바로 쓸 수 있는 스크린샷이 준비돼 있다: [`docs/store/screenshot-1280x800.png`](store/screenshot-1280x800.png)**
 
-실제 패널 CSS(`content.css`) + 코어의 실제 캡처 프레임(`clipnote/docs/demo/`)으로 만든 충실한
+실제 패널 CSS(`content.css`) + 코어의 실제 캡처 프레임(`stepkeeper/docs/demo/`)으로 만든 충실한
 홍보용 합성 이미지다(라이브 캡처가 아니라 조립본 — UI·프레임·문구는 전부 진짜). 그대로 업로드해도 되고,
 소스는 `docs/store/screenshot.html`이라 문구를 바꿔 재생성할 수 있다:
 
@@ -69,10 +69,10 @@ python pack.py                 # → dist/clipnote-extension-0.2.0.zip
 최대한 진짜에 가깝게 하려면 확장을 로컬 크롬에 로드해서 실제 화면을 찍는다.
 
 1. `chrome://extensions` → 우상단 **개발자 모드** 켜기
-2. **압축해제된 확장 프로그램을 로드** → `~/dev/clipnote-extension` 폴더 선택
+2. **압축해제된 확장 프로그램을 로드** → `~/dev/stepkeeper-extension` 폴더 선택
 3. 확장 옵션에서 Gemini 키 입력 (aistudio.google.com/apikey, 무료)
 4. 유튜브 how-to 영상 열기 (store-listing.md 추천: 매듭 영상 `Q9NqGd7464U`) → 잠깐 재생
-5. 우하단 **clipnote 버튼** 클릭 → 분석 → **가이드별 3후보 썸네일 패널이 뜬 상태**에서 스크린샷
+5. 우하단 **stepkeeper 버튼** 클릭 → 분석 → **가이드별 3후보 썸네일 패널이 뜬 상태**에서 스크린샷
 6. **1280×800**으로 크기 맞추기 (macOS: 미리보기 앱에서 도구 → 크기 조정, 또는 그 해상도로 크롭)
 
 좋은 스크린샷 = 패널에 가이드 문구 + 후보 3장이 또렷이 보이는 화면. 이게 제품 가치를 한눈에 보여준다.
@@ -87,7 +87,7 @@ store-listing.md의 "개인정보" 절 그대로:
 - **권한별 사유**: storage / host_permission / content script 각각 (store-listing.md에 있음)
 - **원격 코드 사용**: **No**
 - **데이터 수집**: 수집 항목 전부 **체크 안 함** (개발자는 아무 데이터도 안 받음)
-- **개인정보처리방침 URL**: `https://github.com/zlej123/clipnote-extension/blob/main/PRIVACY.md`
+- **개인정보처리방침 URL**: `https://github.com/zlej123/stepkeeper-extension/blob/main/PRIVACY.md`
 
 이 확장은 "사용자 본인 키로 Google에 직접 호출, 개발자 서버 없음"이라 데이터 수집 신고가 전부 "없음"이다 —
 심사에서 유리한 지점.
@@ -108,5 +108,5 @@ store-listing.md의 "개인정보" 절 그대로:
 
 ## 승인 후
 
-- 스토어 URL을 README와 clipnote 코어 README의 확장 링크 옆에 추가.
+- 스토어 URL을 README와 stepkeeper 코어 README의 확장 링크 옆에 추가.
 - 이후 업데이트: manifest version 올리고 → pack.py → 대시보드 → Package 탭에서 새 zip 업로드 → 재심사.

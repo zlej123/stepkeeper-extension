@@ -12,7 +12,7 @@
 - [ ] 옵션에서 Gemini API 키 저장 → 다시 열었을 때 유지됨
 
 ## 기본 흐름 (짧은 영상 추천: https://www.youtube.com/watch?v=Q9NqGd7464U — 78초 매듭법)
-- [ ] `/watch` 페이지 우하단에 📋 clipnote 버튼 표시
+- [ ] `/watch` 페이지 우하단에 📋 stepkeeper 버튼 표시
 - [ ] 영상을 2~3초 재생한 뒤 버튼 클릭 (videoWidth 확보용)
 - [ ] "영상 분석 중…" → 1분 내 가이드 카드 표시 (제목·가이드 문구가 한국어)
 - [ ] 각 가이드에 썸네일 3장(before/center/after) + "부적합" 옵션 표시
@@ -27,5 +27,5 @@
 - [ ] "부적합" 선택 가이드는 md에서 `▶ 영상 m:ss에서 직접 확인` 링크로 출력
 
 ## 서버 모드 (선택)
-- [ ] 로컬에서 `python app.py` (clipnote-server) 실행, 옵션에 `http://127.0.0.1:8787` 입력
+- [ ] 로컬에서 `python app.py` (stepkeeper-server) 실행, 옵션에 `http://127.0.0.1:8787` 입력
 - [ ] 동일 흐름이 서버 경유로 동작 (`/v1/analyze` 로그 확인)

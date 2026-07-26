@@ -1,8 +1,8 @@
-# clipnote Privacy Policy
+# stepkeeper Privacy Policy
 
 Last updated: 2026-07-16
 
-clipnote is a browser extension that turns YouTube how-to videos into documents. It is designed to run entirely on your machine, using your own Google Gemini API key.
+stepkeeper is a browser extension that turns YouTube how-to videos into documents. It is designed to run entirely on your machine, using your own Google Gemini API key.
 
 ## What the extension stores
 
@@ -11,7 +11,7 @@ clipnote is a browser extension that turns YouTube how-to videos into documents.
 ## What the extension sends, and to whom
 
 - When you run an analysis, the extension sends the **YouTube video URL, video duration, and analysis prompt** to the **Google Gemini API** (`generativelanguage.googleapis.com`), authenticated with **your own API key**. Google processes this request under its own terms and privacy policy.
-- If you configure an optional clipnote-server URL, the same request goes to **that server of your choosing** instead.
+- If you configure an optional stepkeeper-server URL, the same request goes to **that server of your choosing** instead.
 - Nothing else is transmitted anywhere. There are no analytics, no tracking, no telemetry, and no data collection by the extension authors.
 
 ## What stays local
@@ -26,4 +26,4 @@ clipnote is a browser extension that turns YouTube how-to videos into documents.
 
 ## Contact
 
-Open an issue at https://github.com/zlej123/clipnote-extension/issues
+Open an issue at https://github.com/zlej123/stepkeeper-extension/issues
