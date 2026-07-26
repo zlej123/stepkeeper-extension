@@ -1,8 +1,9 @@
 <!doctype html>
 <meta charset="utf-8">
-<title>stepkeeper 설정</title>
+<title>stepkeeper</title>
 <style>
-  body { font-family: -apple-system, 'Malgun Gothic', sans-serif; width: 340px; padding: 14px; font-size: 13px; }
+  body { font-family: -apple-system, 'Helvetica Neue', 'Malgun Gothic', sans-serif;
+         width: 340px; padding: 14px; font-size: 13px; }
   label { display: block; margin: 10px 0 4px; font-weight: 600; }
   input, select { width: 100%; padding: 6px; box-sizing: border-box; }
   button { margin-top: 14px; width: 100%; padding: 9px; border: 0; border-radius: 8px;
@@ -10,21 +11,23 @@
   small { color: #666; }
   #saved { color: #2e7d32; display: none; }
 </style>
+<!-- 문구는 options.js가 저장된 출력 언어(없으면 브라우저 로케일)로 채운다 -->
 <h3>stepkeeper</h3>
-<label>Gemini API 키</label>
-<input id="apiKey" type="password" placeholder="AI Studio에서 무료 발급">
-<small><a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a> — 카드 등록 없이 발급</small>
-<label>출력 언어</label>
+<label data-i18n="optKey"></label>
+<input id="apiKey" type="password" data-i18n-placeholder="optKeyPlaceholder">
+<small><a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a><span data-i18n="optKeyHint"></span></small>
+<label data-i18n="optLanguage"></label>
 <select id="language">
-  <option value="ko">한국어</option><option value="en">English</option><option value="ja">日本語</option>
+  <option value="en">English</option><option value="ko">한국어</option><option value="ja">日本語</option>
 </select>
-<label>모델</label>
+<label data-i18n="optModel"></label>
 <input id="model" placeholder="gemini-flash-lite-latest">
-<label>stepkeeper-server URL (선택)</label>
-<input id="serverUrl" placeholder="비우면 Gemini 직접 호출">
-<label>Obsidian 보관함 이름 (선택)</label>
-<input id="vault" placeholder="비우면 마지막에 연 보관함 사용">
-<small>"Obsidian에서 열기" 버튼이 노트를 만들 보관함</small>
-<button id="save">저장</button>
-<p id="saved">저장됐습니다.</p>
+<label data-i18n="optServer"></label>
+<input id="serverUrl" data-i18n-placeholder="optServerPlaceholder">
+<label data-i18n="optVault"></label>
+<input id="vault" data-i18n-placeholder="optVaultPlaceholder">
+<small data-i18n="optVaultHint"></small>
+<button id="save" data-i18n="optSave"></button>
+<p id="saved" data-i18n="optSaved"></p>
+<script src="i18n.js"></script>
 <script src="options.js"></script>

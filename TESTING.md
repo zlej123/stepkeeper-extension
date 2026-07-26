@@ -21,6 +21,8 @@
 - [ ] 다운로드 폴더에서 document.md를 Obsidian/VSCode로 열면 이미지가 보임 (같은 폴더)
 
 ## 출력 언어 (옵션의 language 설정을 따라감)
+- [ ] 새 프로필에 설치 → 옵션 화면이 **브라우저 언어**로 뜸 (한국어 크롬이면 한국어, 영어면 영어)
+- [ ] 옵션의 출력 언어를 바꾸면 **저장 전에** 화면 문구가 즉시 바뀜
 - [ ] language=en으로 실행 → 패널 문구가 영어("Analyzing the video…", "Make the document")
 - [ ] 같은 실행의 document.md 뼈대도 영어(`**■ Steps**`, `*From [...] — kept with stepkeeper*`)
 - [ ] language=ko로 실행 → 패널·문서 모두 한국어(`**■ 순서**`, `*출처: ... — stepkeeper로 생성*`)

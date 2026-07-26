@@ -23,6 +23,7 @@
         "https://www.youtube.com/watch*"
       ],
       "js": [
+        "i18n.js",
         "content.js"
       ],
       "css": [

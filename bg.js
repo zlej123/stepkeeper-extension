@@ -1,5 +1,6 @@
 // stepkeeper background: Gemini 호출(직접) 또는 stepkeeper-server 경유.
 // 페이지 CORS를 피하려고 service worker에서 fetch한다.
+importScripts("i18n.js");   // 언어 기본값·문구 공용 모듈
 
 const GEMINI = "https://generativelanguage.googleapis.com/v1beta/models";
 
@@ -91,7 +92,8 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message.type !== "stepkeeper:analyze") return false;
   (async () => {
     const settings = Object.assign(
-      { apiKey: "", language: "ko", model: "gemini-flash-lite-latest", maxGuides: 5, serverUrl: "" },
+      { apiKey: "", language: stepkeeperDefaultLanguage(),
+        model: "gemini-flash-lite-latest", maxGuides: 5, serverUrl: "" },
       await chrome.storage.sync.get(["apiKey", "language", "model", "maxGuides", "serverUrl"]));
     if (!settings.apiKey) throw new Error("확장 설정에서 Gemini API 키를 먼저 입력하세요.");
     const analysis = settings.serverUrl
