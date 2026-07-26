@@ -14,11 +14,17 @@
 ## 기본 흐름 (짧은 영상 추천: https://www.youtube.com/watch?v=Q9NqGd7464U — 78초 매듭법)
 - [ ] `/watch` 페이지 우하단에 📋 stepkeeper 버튼 표시
 - [ ] 영상을 2~3초 재생한 뒤 버튼 클릭 (videoWidth 확보용)
-- [ ] "영상 분석 중…" → 1분 내 가이드 카드 표시 (제목·가이드 문구가 한국어)
+- [ ] "Analyzing the video…"(또는 설정 언어의 문구) → 1분 내 가이드 카드 표시
 - [ ] 각 가이드에 썸네일 3장(before/center/after) + "부적합" 옵션 표시
 - [ ] 캡처 동안 소리가 나지 않고, 끝나면 원래 재생 위치로 복원
 - [ ] "문서 만들기" → document.md + 선택한 .jpg 다운로드
 - [ ] 다운로드 폴더에서 document.md를 Obsidian/VSCode로 열면 이미지가 보임 (같은 폴더)
+
+## 출력 언어 (옵션의 language 설정을 따라감)
+- [ ] language=en으로 실행 → 패널 문구가 영어("Analyzing the video…", "Make the document")
+- [ ] 같은 실행의 document.md 뼈대도 영어(`**■ Steps**`, `*From [...] — kept with stepkeeper*`)
+- [ ] language=ko로 실행 → 패널·문서 모두 한국어(`**■ 순서**`, `*출처: ... — stepkeeper로 생성*`)
+- [ ] 지원 목록에 없는 언어(예: ja) → 본문은 해당 언어, 뼈대는 영어 (한국어로 새지 않음)
 
 ## 예외 경로
 - [ ] API 키 없이 실행 → "API 키를 먼저 입력하세요" 오류 표시
