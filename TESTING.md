@@ -26,7 +26,8 @@
 - [ ] language=en으로 실행 → 패널 문구가 영어("Analyzing the video…", "Make the document")
 - [ ] 같은 실행의 document.md 뼈대도 영어(`**■ Steps**`, `*From [...] — kept with stepkeeper*`)
 - [ ] language=ko로 실행 → 패널·문서 모두 한국어(`**■ 순서**`, `*출처: ... — stepkeeper로 생성*`)
-- [ ] 지원 목록에 없는 언어(예: ja) → 본문은 해당 언어, 뼈대는 영어 (한국어로 새지 않음)
+- [ ] language=ja → 패널·문서 모두 일본어(`**■ 手順**`, `出典: … — stepkeeper で作成`)
+- [ ] 번역본이 없는 언어(예: de) → 본문은 해당 언어, 뼈대는 영어 (한국어로 새지 않음)
 
 ## 예외 경로
 - [ ] API 키 없이 실행 → "API 키를 먼저 입력하세요" 오류 표시
