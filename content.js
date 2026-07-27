@@ -142,19 +142,41 @@
       if (!wasPaused) video.play();
     }
 
+    // AI 자동 선택 (옵션 켬) — 픽커를 건너뛰지 않고 "미리 선택"만 한다 (코어·앱과 동일)
+    let aiPicks = {}, aiNotice = null;
+    if (reply.autoPick) {
+      ui(`<p>${L.autoPicking}</p>`);
+      const answer = await chrome.runtime.sendMessage({
+        type: "stepkeeper:autopick",
+        guides: guides.map((guide) => ({
+          id: guide.id, phrase: guide.phrase, what_to_show: guide.what_to_show,
+          guide_text: guide.guide_text,
+          candidates: SLOTS.map((slot) => ({
+            slot, data: shots[guide.id][slot].split(",")[1],   // dataURL → base64 본문
+          })),
+        })),
+      });
+      if (answer?.ok) aiPicks = answer.picks || {};
+      else aiNotice = answer?.error || L.autoPickFailed;
+    }
+    const checkedSlot = (guideId) => aiPicks[guideId]?.slot || "center";
+
     // 선택 UI
     const cards = guides.map((guide) => `
       <section class="cn-card" data-guide="${guide.id}">
-        <p><b>${guide.id}</b> · ${guide.phrase}<br><small>${guide.guide_text}</small></p>
+        <p><b>${guide.id}</b> · ${guide.phrase}<br><small>${guide.guide_text}</small>${
+          aiPicks[guide.id]?.reason ? `<br><small class="cn-ai">✨ ${aiPicks[guide.id].reason}</small>` : ""}</p>
         <div class="cn-row">
           ${SLOTS.map((slot) => `
-            <label><input type="radio" name="${guide.id}" value="${slot}" ${slot === "center" ? "checked" : ""}>
+            <label><input type="radio" name="${guide.id}" value="${slot}" ${slot === checkedSlot(guide.id) ? "checked" : ""}>
             <img src="${shots[guide.id][slot]}"></label>`).join("")}
-          <label class="cn-none"><input type="radio" name="${guide.id}" value="none"><span>${L.unfit}</span></label>
+          <label class="cn-none"><input type="radio" name="${guide.id}" value="none" ${checkedSlot(guide.id) === "none" ? "checked" : ""}><span>${L.unfit}</span></label>
         </div>
       </section>`).join("");
     ui(`
       <p><b>${analysis.title}</b> — ${L.pickPrompt}</p>
+      ${Object.keys(aiPicks).length ? `<p class="cn-ai">✨ ${L.autoPicked}</p>` : ""}
+      ${aiNotice ? `<p class="cn-err">${aiNotice}</p>` : ""}
       ${cards}
       <div class="cn-actions">
         <button id="cn-make" class="cn-primary">${L.makeDoc}</button>

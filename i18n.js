@@ -2,6 +2,16 @@
 // (앱의 Localizable.xcstrings, 코어의 template.<lang>.md와 같은 역할 — 폴백은 영어)
 const STEPKEEPER_STRINGS = {
   en: {
+    autoPicking: "AI is picking the frames…",
+    autoPicked: "AI pre-selected a frame for each guide — change any you disagree with.",
+    autoPickFailed: "AI pick failed — pick manually.",
+    optAutoPick: "AI picks the frame",
+    optAutoPickHint: "Gemini looks at the three candidates and pre-selects one. You still see the picker and can change it.",
+    errNoKey: "Enter your Gemini API key in the extension options first.",
+    errRateLimited: "Gemini free-tier limit reached — try again in a moment.",
+    errGemini: (status) => `Gemini error (HTTP ${status})`,
+    errBadResponse: "Couldn't read Gemini's response.",
+    errServer: (status, detail) => `stepkeeper-server error (HTTP ${status}): ${detail}`,
     optTitle: "stepkeeper settings", optKey: "Gemini API key",
     optKeyPlaceholder: "Free from AI Studio",
     optKeyHint: " — free, no card needed",
@@ -29,6 +39,16 @@ const STEPKEEPER_STRINGS = {
     noPlayer: "Couldn't find the player. Play the video once and try again.",
   },
   ko: {
+    autoPicking: "AI가 장면을 고르는 중…",
+    autoPicked: "AI가 가이드마다 장면을 미리 선택했습니다 — 다르면 바꾸세요.",
+    autoPickFailed: "AI 선택에 실패했습니다 — 직접 골라 주세요.",
+    optAutoPick: "AI가 장면 선택",
+    optAutoPickHint: "Gemini가 후보 3장을 보고 하나를 미리 선택합니다. 선택 화면은 그대로 뜨고 바꿀 수 있습니다.",
+    errNoKey: "확장 설정에서 Gemini API 키를 먼저 입력하세요.",
+    errRateLimited: "Gemini 무료 티어 한도에 도달했습니다. 잠시 후 다시 시도하세요.",
+    errGemini: (status) => `Gemini 오류 (HTTP ${status})`,
+    errBadResponse: "Gemini 응답을 해석하지 못했습니다.",
+    errServer: (status, detail) => `stepkeeper-server 오류 (HTTP ${status}): ${detail}`,
     optTitle: "stepkeeper 설정", optKey: "Gemini API 키",
     optKeyPlaceholder: "AI Studio에서 무료 발급",
     optKeyHint: " — 카드 등록 없이 발급",
@@ -56,6 +76,16 @@ const STEPKEEPER_STRINGS = {
     noPlayer: "플레이어를 찾지 못했습니다. 영상을 한 번 재생해 주세요.",
   },
   ja: {
+    autoPicking: "AI がフレームを選んでいます…",
+    autoPicked: "AI が各ガイドのフレームを事前選択しました — 違う場合は変更してください。",
+    autoPickFailed: "AI の選択に失敗しました — 手動で選んでください。",
+    optAutoPick: "AI がフレームを選ぶ",
+    optAutoPickHint: "Gemini が候補 3 枚を見て 1 枚を事前選択します。選択画面はそのまま表示され、変更できます。",
+    errNoKey: "拡張機能の設定で Gemini API キーを先に入力してください。",
+    errRateLimited: "Gemini 無料枠の上限に達しました。しばらくしてから再試行してください。",
+    errGemini: (status) => `Gemini エラー (HTTP ${status})`,
+    errBadResponse: "Gemini の応答を解析できませんでした。",
+    errServer: (status, detail) => `stepkeeper-server エラー (HTTP ${status}): ${detail}`,
     category: "カテゴリ", materials: "用意するもの", ingredients: "材料",
     steps: "手順", guide: (phrase) => `「${phrase}」とは:`,
     seeAt: (t) => `動画の ${t} で確認`,
@@ -95,3 +125,29 @@ function stepkeeperDefaultLanguage() {
   const tag = (globalThis.navigator?.language || "en").split("-")[0];
   return tag in STEPKEEPER_STRINGS ? tag : "en";
 }
+
+/// 코어 autopick.py의 프롬프트·스키마 — 앱(GeminiAPI.autoPick)과도 같은 문구를 쓴다.
+const STEPKEEPER_AUTOPICK_PROMPT = `당신은 시각 가이드용 대표 프레임을 고르는 검수자입니다.
+각 가이드마다 후보 3장(before/center/after)이 순서대로 첨부됩니다.
+가이드의 '보여야 할 것'이 실제로 가장 명확하게 보이는 후보 하나를 고르세요.
+세 장 모두에서 그것이 보이지 않으면 반드시 "none"을 고르세요 — 억지로 고르지 않습니다.
+각 선택에 한 문장 근거(reason)를 답하세요. JSON만 출력합니다.`;
+
+const STEPKEEPER_AUTOPICK_SCHEMA = {
+  type: "object",
+  required: ["picks"],
+  properties: {
+    picks: {
+      type: "array",
+      items: {
+        type: "object",
+        required: ["guide_id", "slot", "reason"],
+        properties: {
+          guide_id: { type: "string" },
+          slot: { enum: ["before", "center", "after", "none"] },
+          reason: { type: "string" },
+        },
+      },
+    },
+  },
+};

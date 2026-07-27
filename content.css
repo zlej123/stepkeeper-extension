@@ -30,3 +30,5 @@
 #stepkeeper-panel .cn-primary { background: #e5484d; color: #fff; }
 #stepkeeper-panel .cn-secondary { background: #f1f3f5; color: #333; border: 1px solid #ddd; }
 #stepkeeper-panel .cn-err { color: #c62828; }
+
+#stepkeeper-panel .cn-ai { color: #7a5af5; }
