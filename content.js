@@ -24,17 +24,24 @@
     return video;
   }
 
+  // 후보는 스텝 경계가 아니라 center 주변에서 뽑는다 (코어 CANDIDATE_SPREAD와 동일 규칙).
+  // 긴 스텝에서 경계 후보는 다른 주제를 찍는다 — 실측: 19초 스텝에서 18·31·39초가 잡혔고
+  // 가이드가 요구한 26~29초 동작이 세 장 어디에도 없었다.
+  const CANDIDATE_SPREAD = 4;
+
   function candidateTimes(step, guide, duration) {
     const center = guide.best_visual_timestamp;
-    let before, after;
-    if (step) {
-      before = Math.max(0, (step.t_start ?? center) - 1);
-      after = Math.min(Math.max(0, duration - 1), (step.t_end ?? center) + 1);
-    } else {
-      before = Math.max(0, center - 4);
-      after = Math.min(Math.max(0, duration - 1), center + 4);
-    }
-    return { before, center, after };
+    const last = Math.max(0, duration - 1);
+    const length = step
+      ? Math.max(0, (step.t_end ?? center) - (step.t_start ?? center)) : null;
+    const spread = length === null
+      ? CANDIDATE_SPREAD
+      : Math.max(1, Math.min(CANDIDATE_SPREAD, Math.floor(length / 4)));
+    return {
+      before: Math.max(0, center - spread),
+      center,
+      after: Math.min(last, center + spread),
+    };
   }
 
   function seek(video, t) {
