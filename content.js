@@ -14,6 +14,14 @@
   // ---- 유틸 ----------------------------------------------------------------
   const hms = (sec) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`;
 
+  // canvas dataURL의 base64 본문을 바이트로 (ZIP에 넣을 이미지)
+  function dataUrlBytes(dataUrl) {
+    const raw = atob(dataUrl.split(",")[1]);
+    const bytes = new Uint8Array(raw.length);
+    for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
+    return bytes;
+  }
+
   // 모델 출력(제목·가이드 문구·근거)과 오류 문자열은 신뢰할 수 없는 입력이다 — 영상 내용이
   // 프롬프트를 거쳐 그대로 흘러오므로, innerHTML에 넣기 전에 항상 이스케이프한다 (리뷰 #3).
   const esc = (value) => String(value ?? "")
@@ -71,7 +79,8 @@
 
   function download(name, content, mime) {
     const anchor = document.createElement("a");
-    anchor.href = content.startsWith("data:") ? content
+    anchor.href = content instanceof Blob ? URL.createObjectURL(content)
+      : content.startsWith("data:") ? content
       : URL.createObjectURL(new Blob([content], { type: mime || "text/markdown" }));
     anchor.download = name;
     anchor.click();
@@ -213,8 +222,23 @@
 
     panel.querySelector("#cn-make").onclick = () => {
       const picks = collectPicks();
-      download("document.md", buildMarkdown(vid, analysis, picks));
-      downloadImages(picks);
+      // 낱개 다운로드는 다운로드 폴더에 흩어졌다 (외부 리뷰 #9) — 재현에 필요한 것을
+      // 전부 담은 ZIP 하나로: 문서·선택 이미지·분석 원본·출처 manifest
+      const files = [{ name: "document.md", data: buildMarkdown(vid, analysis, picks) }];
+      for (const [guideId, slot] of Object.entries(picks)) {
+        if (slot !== "none") files.push({ name: `${guideId}.jpg`, data: dataUrlBytes(shots[guideId][slot]) });
+      }
+      files.push({ name: "analysis.json", data: JSON.stringify(analysis, null, 2) });
+      files.push({ name: "manifest.json", data: JSON.stringify({
+        source_url: `https://www.youtube.com/watch?v=${vid}`,
+        video_id: vid,
+        profile: analysis._profile || "",
+        language: reply.language || analysis._output_language || "",
+        contract_version: analysis._contract_version || "",
+        generated_at: new Date().toISOString(),
+        picks,
+      }, null, 2) });
+      download(`stepkeeper-${vid}.zip`, stepkeeperZip(files));
       ui(`<p>${L.done}</p>`);
     };
 

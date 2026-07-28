@@ -24,6 +24,7 @@
       ],
       "js": [
         "i18n.js",
+        "zip.js",
         "content.js"
       ],
       "css": [

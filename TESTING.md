@@ -22,8 +22,8 @@
 - [ ] "Analyzing the video…"(또는 설정 언어의 문구) → 1분 내 가이드 카드 표시
 - [ ] 각 가이드에 썸네일 3장(before/center/after) + "부적합" 옵션 표시
 - [ ] 캡처 동안 소리가 나지 않고, 끝나면 원래 재생 위치로 복원
-- [ ] "문서 만들기" → document.md + 선택한 .jpg 다운로드
-- [ ] 다운로드 폴더에서 document.md를 Obsidian/VSCode로 열면 이미지가 보임 (같은 폴더)
+- [ ] "문서 만들기" → `stepkeeper-<영상ID>.zip` 하나 다운로드
+- [ ] zip 안에 document.md·선택한 vg-*.jpg·analysis.json·manifest.json이 있고, 풀어서 md를 열면 이미지가 보임
 
 ## 출력 언어 (옵션의 language 설정을 따라감)
 - [ ] 새 프로필에 설치 → 옵션 화면이 **브라우저 언어**로 뜸 (한국어 크롬이면 한국어, 영어면 영어)
