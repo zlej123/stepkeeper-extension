@@ -14,6 +14,12 @@
   // ---- 유틸 ----------------------------------------------------------------
   const hms = (sec) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`;
 
+  // 모델 출력(제목·가이드 문구·근거)과 오류 문자열은 신뢰할 수 없는 입력이다 — 영상 내용이
+  // 프롬프트를 거쳐 그대로 흘러오므로, innerHTML에 넣기 전에 항상 이스케이프한다 (리뷰 #3).
+  const esc = (value) => String(value ?? "")
+    .replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;").replaceAll("'", "&#39;");
+
   function currentVideoId() {
     return new URLSearchParams(location.search).get("v");
   }
@@ -114,7 +120,7 @@
     const vid = currentVideoId();
     if (!vid) return;
     let video;
-    try { video = getPlayer(); } catch (error) { ui(`<p class="cn-err">${error.message}</p>`); return; }
+    try { video = getPlayer(); } catch (error) { ui(`<p class="cn-err">${esc(error.message)}</p>`); return; }
     const duration = Math.floor(video.duration);
     const profile = /레시피|요리|recipe|cook/i.test(document.title) ? "recipe" : "generic";
 
@@ -123,7 +129,7 @@
       type: "stepkeeper:analyze",
       payload: { url: `https://www.youtube.com/watch?v=${vid}`, duration, profile },
     });
-    if (!reply?.ok) { ui(`<p class="cn-err">${reply?.error || L.analyzeFailed}</p>`); return; }
+    if (!reply?.ok) { ui(`<p class="cn-err">${esc(reply?.error || L.analyzeFailed)}</p>`); return; }
     const analysis = reply.analysis;
     analysis._profile ||= profile;
     // 분석 응답이 알려준 출력 언어로 패널·문서 문구를 맞춘다 (설정의 language)
@@ -143,7 +149,7 @@
         for (const slot of SLOTS) shots[guide.id][slot] = await captureFrame(video, times[slot]);
       }
     } catch (error) {
-      ui(`<p class="cn-err">${L.captureFailed(error.message)}</p>`);
+      ui(`<p class="cn-err">${esc(L.captureFailed(error.message))}</p>`);
       return;
     } finally {
       video.currentTime = t0; video.muted = wasMuted;
@@ -172,19 +178,19 @@
     // 선택 UI
     const cards = guides.map((guide) => `
       <section class="cn-card" data-guide="${guide.id}">
-        <p><b>${guide.id}</b> · ${guide.phrase}<br><small>${guide.guide_text}</small>${
-          aiPicks[guide.id]?.reason ? `<br><small class="cn-ai">✨ ${aiPicks[guide.id].reason}</small>` : ""}</p>
+        <p><b>${esc(guide.id)}</b> · ${esc(guide.phrase)}<br><small>${esc(guide.guide_text)}</small>${
+          aiPicks[guide.id]?.reason ? `<br><small class="cn-ai">✨ ${esc(aiPicks[guide.id].reason)}</small>` : ""}</p>
         <div class="cn-row">
           ${SLOTS.map((slot) => `
-            <label><input type="radio" name="${guide.id}" value="${slot}" ${slot === checkedSlot(guide.id) ? "checked" : ""}>
+            <label><input type="radio" name="${esc(guide.id)}" value="${slot}" ${slot === checkedSlot(guide.id) ? "checked" : ""}>
             <img src="${shots[guide.id][slot]}"></label>`).join("")}
-          <label class="cn-none"><input type="radio" name="${guide.id}" value="none" ${checkedSlot(guide.id) === "none" ? "checked" : ""}><span>${L.unfit}</span></label>
+          <label class="cn-none"><input type="radio" name="${esc(guide.id)}" value="none" ${checkedSlot(guide.id) === "none" ? "checked" : ""}><span>${L.unfit}</span></label>
         </div>
       </section>`).join("");
     ui(`
-      <p><b>${analysis.title}</b> — ${L.pickPrompt}</p>
+      <p><b>${esc(analysis.title)}</b> — ${L.pickPrompt}</p>
       ${Object.keys(aiPicks).length ? `<p class="cn-ai">✨ ${L.autoPicked}</p>` : ""}
-      ${aiNotice ? `<p class="cn-err">${aiNotice}</p>` : ""}
+      ${aiNotice ? `<p class="cn-err">${esc(aiNotice)}</p>` : ""}
       ${cards}
       <div class="cn-actions">
         <button id="cn-make" class="cn-primary">${L.makeDoc}</button>
@@ -195,7 +201,7 @@
     const collectPicks = () => {
       const picks = {};
       for (const guide of guides) {
-        picks[guide.id] = panel.querySelector(`input[name="${guide.id}"]:checked`)?.value || "none";
+        picks[guide.id] = panel.querySelector(`input[name="${CSS.escape(guide.id)}"]:checked`)?.value || "none";
       }
       return picks;
     };
@@ -260,7 +266,7 @@
       try {
         await run();
       } catch (error) {
-        ui(`<p class="cn-err">${error.message}</p>`);
+        ui(`<p class="cn-err">${esc(error.message)}</p>`);
       } finally {
         running = false;
         setButtonBusy(false);

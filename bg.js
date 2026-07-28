@@ -134,12 +134,34 @@ async function autoPickDirect(guides, settings) {
   return picks;
 }
 
+async function loadKey() {
+  // 옛 버전이 sync에 남긴 키는 local로 옮긴다 — 키는 절대 sync에 두지 않는다 (리뷰 #3)
+  const legacy = await chrome.storage.sync.get("apiKey");
+  if (legacy.apiKey) {
+    await chrome.storage.local.set({ apiKey: legacy.apiKey });
+    await chrome.storage.sync.remove("apiKey");
+  }
+  const session = await chrome.storage.session.get("apiKey");
+  if (session.apiKey) return session.apiKey;
+  return (await chrome.storage.local.get("apiKey")).apiKey || "";
+}
+
 async function loadSettings() {
-  return Object.assign(
-    { apiKey: "", language: stepkeeperDefaultLanguage(), model: "gemini-flash-lite-latest",
+  const settings = Object.assign(
+    { language: stepkeeperDefaultLanguage(), model: "gemini-flash-lite-latest",
       maxGuides: 5, serverUrl: "", autoPick: false },
     await chrome.storage.sync.get(
-      ["apiKey", "language", "model", "maxGuides", "serverUrl", "autoPick"]));
+      ["language", "model", "maxGuides", "serverUrl", "autoPick"]));
+  settings.apiKey = await loadKey();
+  // 서버 origin 권한이 회수됐으면 직접 모드로 폴백 — 권한 없는 fetch는 어차피 거부된다 (리뷰 #2)
+  if (settings.serverUrl) {
+    let origin;
+    try { origin = new URL(settings.serverUrl).origin; } catch { origin = null; }
+    const allowed = origin
+      && await chrome.permissions.contains({ origins: [`${origin}/*`] });
+    if (!allowed) settings.serverUrl = "";
+  }
+  return settings;
 }
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {

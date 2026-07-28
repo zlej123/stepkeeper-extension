@@ -2,6 +2,9 @@
 // (앱의 Localizable.xcstrings, 코어의 template.<lang>.md와 같은 역할 — 폴백은 영어)
 const STEPKEEPER_STRINGS = {
   en: {
+    optRemember: "Remember key on this device",
+    optRememberHint: "Off = the key lives only until you close the browser. It is never synced to other devices either way.",
+    optServerDenied: "Permission for that server was declined — server URL not saved.",
     starting: "Starting…", working: "Working…",
     autoPicking: "AI is picking the frames…",
     autoPicked: "AI pre-selected a frame for each guide — change any you disagree with.",
@@ -40,6 +43,9 @@ const STEPKEEPER_STRINGS = {
     noPlayer: "Couldn't find the player. Play the video once and try again.",
   },
   ko: {
+    optRemember: "키를 이 기기에 저장",
+    optRememberHint: "끄면 브라우저를 닫을 때 키가 지워집니다. 어느 쪽이든 다른 기기로 동기화되지 않습니다.",
+    optServerDenied: "해당 서버 접근 권한이 거부됐습니다 — 서버 URL을 저장하지 않았습니다.",
     starting: "시작하는 중…", working: "진행 중…",
     autoPicking: "AI가 장면을 고르는 중…",
     autoPicked: "AI가 가이드마다 장면을 미리 선택했습니다 — 다르면 바꾸세요.",
@@ -78,6 +84,9 @@ const STEPKEEPER_STRINGS = {
     noPlayer: "플레이어를 찾지 못했습니다. 영상을 한 번 재생해 주세요.",
   },
   ja: {
+    optRemember: "キーをこの端末に保存",
+    optRememberHint: "オフにするとブラウザを閉じたときにキーが消えます。どちらの場合も他の端末には同期されません。",
+    optServerDenied: "サーバーへのアクセス許可が拒否されました — サーバー URL は保存されていません。",
     starting: "開始しています…", working: "実行中…",
     autoPicking: "AI がフレームを選んでいます…",
     autoPicked: "AI が各ガイドのフレームを事前選択しました — 違う場合は変更してください。",
