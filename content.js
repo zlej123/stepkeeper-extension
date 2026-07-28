@@ -86,32 +86,9 @@
     anchor.click();
   }
 
-  // ---- 마크다운 조립 (skill-core template.md와 동일한 출력 형태) ------------
+  // ---- 마크다운 조립은 doc.js(stepkeeperBuildMarkdown) — 코어 골든과 바이트 대조된다
   function buildMarkdown(vid, analysis, picks) {
-    const lines = [];
-    const icon = analysis._profile === "recipe" ? "🍳" : "📋";
-    lines.push(`## ${icon} ${analysis.title}`, "", analysis.summary || "", "");
-    if (analysis.category) lines.push(`**${L.category}:** ${analysis.category}`, "");
-    lines.push(`**■ ${analysis._profile === "recipe" ? L.ingredients : L.materials}**`
-      + (analysis.servings ? ` (${analysis.servings})` : ""));
-    for (const m of analysis.materials || []) lines.push(`- ${m.name} ${m.amount}`);
-    lines.push("", `**■ ${L.steps}**`);
-    const byStep = {};
-    for (const g of analysis.visual_guides || []) (byStep[g.step_id] ||= []).push(g);
-    for (const step of analysis.steps || []) {
-      lines.push(`${step.id}. **${step.summary}**`, `   - ${step.detail}`);
-      for (const guide of byStep[step.id] || []) {
-        lines.push(`   - 💡 *${L.guide(guide.phrase)}* ${guide.guide_text}`);
-        const pick = picks[guide.id];
-        if (pick && pick !== "none") {
-          lines.push(`   ![${guide.phrase}](${guide.id}.jpg)`);
-        } else if (guide.best_visual_timestamp !== null) {
-          lines.push(`   ▶ [${L.seeAt(hms(guide.best_visual_timestamp))}](https://youtu.be/${vid}?t=${guide.best_visual_timestamp})`);
-        }
-      }
-    }
-    lines.push("", "---", L.source(analysis.title, `https://youtu.be/${vid}`), "");
-    return lines.join("\n");
+    return stepkeeperBuildMarkdown(vid, analysis, picks, L);
   }
 
   // ---- UI -------------------------------------------------------------------

@@ -10,7 +10,7 @@ HERE = Path(__file__).parent
 
 # 런타임 파일 전부 — 하나라도 빠지면 로드 시점에 깨진다 (i18n.js는 content/bg/options 공용)
 INCLUDE = [
-    "manifest.json", "i18n.js", "zip.js", "bg.js", "content.js", "content.css",
+    "manifest.json", "i18n.js", "zip.js", "doc.js", "bg.js", "content.js", "content.css",
     "options.html", "options.js",
 ]
 INCLUDE_DIRS = ["icons", "assets"]

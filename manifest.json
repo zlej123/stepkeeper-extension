@@ -25,6 +25,7 @@
       "js": [
         "i18n.js",
         "zip.js",
+        "doc.js",
         "content.js"
       ],
       "css": [
