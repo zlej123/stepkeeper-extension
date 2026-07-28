@@ -32,3 +32,4 @@
 #stepkeeper-panel .cn-err { color: #c62828; }
 
 #stepkeeper-panel .cn-ai { color: #7a5af5; }
+#stepkeeper-btn:disabled { opacity: .6; cursor: progress; }

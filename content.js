@@ -4,6 +4,7 @@
 
   const SLOTS = ["before", "center", "after"];
   let panel = null;
+  let running = false;   // 실행 중 중복 클릭 차단 (같은 영상을 두 번 분석하면 사용량만 두 배)
 
   // ---- 문구 (문서·패널 모두 출력 언어를 따른다) -----------------------------
   // 코어 skill-core/profiles/<p>/template[.<lang>].md와 같은 규칙: 번역본이 있으면 그것을,
@@ -229,13 +230,35 @@
     };
   }
 
+  /// 버튼 상태 — 클릭 즉시 눈에 보이게 바꾼다. 피드백이 없으면 사용자가 다시 누르고,
+  /// 그때마다 분석이 한 번 더 돌아 무료 티어 사용량만 배로 나간다.
+  function setButtonBusy(busy) {
+    const button = document.getElementById("stepkeeper-btn");
+    if (!button) return;
+    button.disabled = busy;
+    button.textContent = busy ? `⏳ ${L.working}` : "📋 stepkeeper";
+  }
+
   // 진입 버튼
   function mountButton() {
     if (document.getElementById("stepkeeper-btn")) return;
     const button = document.createElement("button");
     button.id = "stepkeeper-btn";
     button.textContent = "📋 stepkeeper";
-    button.onclick = () => run().catch((error) => ui(`<p class="cn-err">${error.message}</p>`));
+    button.onclick = async () => {
+      if (running) return;
+      running = true;
+      setButtonBusy(true);
+      ui(`<p>${L.starting}</p>`);   // await 이전에 패널부터 띄운다 (클릭이 먹혔다는 신호)
+      try {
+        await run();
+      } catch (error) {
+        ui(`<p class="cn-err">${error.message}</p>`);
+      } finally {
+        running = false;
+        setButtonBusy(false);
+      }
+    };
     document.body.appendChild(button);
   }
 

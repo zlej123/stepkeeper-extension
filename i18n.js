@@ -2,6 +2,7 @@
 // (앱의 Localizable.xcstrings, 코어의 template.<lang>.md와 같은 역할 — 폴백은 영어)
 const STEPKEEPER_STRINGS = {
   en: {
+    starting: "Starting…", working: "Working…",
     autoPicking: "AI is picking the frames…",
     autoPicked: "AI pre-selected a frame for each guide — change any you disagree with.",
     autoPickFailed: "AI pick failed — pick manually.",
@@ -39,6 +40,7 @@ const STEPKEEPER_STRINGS = {
     noPlayer: "Couldn't find the player. Play the video once and try again.",
   },
   ko: {
+    starting: "시작하는 중…", working: "진행 중…",
     autoPicking: "AI가 장면을 고르는 중…",
     autoPicked: "AI가 가이드마다 장면을 미리 선택했습니다 — 다르면 바꾸세요.",
     autoPickFailed: "AI 선택에 실패했습니다 — 직접 골라 주세요.",
@@ -76,6 +78,7 @@ const STEPKEEPER_STRINGS = {
     noPlayer: "플레이어를 찾지 못했습니다. 영상을 한 번 재생해 주세요.",
   },
   ja: {
+    starting: "開始しています…", working: "実行中…",
     autoPicking: "AI がフレームを選んでいます…",
     autoPicked: "AI が各ガイドのフレームを事前選択しました — 違う場合は変更してください。",
     autoPickFailed: "AI の選択に失敗しました — 手動で選んでください。",
