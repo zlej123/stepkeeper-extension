@@ -45,6 +45,21 @@ function normalize(analysis) {
   return analysis;
 }
 
+/// 코어 analyze.asset_digest와 동일 — rules+prompt+schema 바이트의 sha256 앞 12자 (리뷰 #6).
+/// 직접 Gemini 경로 전용: 서버 경로는 서버가 스탬프한다. 실패 시 빈 문자열(분석은 막지 않음).
+async function assetDigest(profile) {
+  try {
+    const text = (await loadAsset("assets/skill-core/engine/rules.md"))
+      + (await loadAsset(`assets/skill-core/profiles/${profile}/prompt.md`))
+      + (await loadAsset(`assets/skill-core/profiles/${profile}/schema.json`));
+    const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+    return [...new Uint8Array(hash)].map((b) => b.toString(16).padStart(2, "0"))
+      .join("").slice(0, 12);
+  } catch {
+    return "";
+  }
+}
+
 async function analyzeDirect(payload, settings) {
   const prompt = await buildPrompt(
     payload.profile, payload.duration, settings.language, settings.maxGuides);
@@ -61,7 +76,10 @@ async function analyzeDirect(payload, settings) {
       },
     }),
   });
-  return normalize(await readGeminiJSON(response, settings.language));
+  const analysis = normalize(await readGeminiJSON(response, settings.language));
+  const digest = await assetDigest(payload.profile);
+  if (digest) analysis._asset_digest = digest;
+  return analysis;
 }
 
 async function analyzeViaServer(payload, settings) {
