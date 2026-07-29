@@ -37,3 +37,7 @@
   flex: 1; display: flex; align-items: center; justify-content: center; text-align: center;
   min-height: 56px; border: 3px dashed #ddd; border-radius: 6px; color: #999; font-size: 11px;
 }
+#stepkeeper-panel .cn-risk {
+  background: #fff4e5; border: 1px solid #f0c380; border-radius: 8px;
+  padding: 8px 10px; color: #8a5a00; font-size: 12px;
+}
