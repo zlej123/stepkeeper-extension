@@ -33,3 +33,7 @@
 
 #stepkeeper-panel .cn-ai { color: #7a5af5; }
 #stepkeeper-btn:disabled { opacity: .6; cursor: progress; }
+#stepkeeper-panel .cn-fail {
+  flex: 1; display: flex; align-items: center; justify-content: center; text-align: center;
+  min-height: 56px; border: 3px dashed #ddd; border-radius: 6px; color: #999; font-size: 11px;
+}
