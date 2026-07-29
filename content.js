@@ -132,11 +132,16 @@
         ui(`<p>${L.capturing(guide.id, guides.length)}</p>`);
         shots[guide.id] = {};
         const times = candidateTimes(steps[guide.step_id], guide, duration);
-        for (const slot of SLOTS) shots[guide.id][slot] = await captureFrame(video, times[slot]);
+        for (const slot of SLOTS) {
+          // 슬롯 단위 격리 (앱과 동일): 한 후보의 seek/캡처 실패가 전체 흐름을 중단시키면
+          // 제품이 약속한 "부적합 → 타임스탬프 링크" 폴백까지 갈 수 없다 (리뷰 3차 P1)
+          try {
+            shots[guide.id][slot] = await captureFrame(video, times[slot]);
+          } catch {
+            shots[guide.id][slot] = null;
+          }
+        }
       }
-    } catch (error) {
-      ui(`<p class="cn-err">${esc(L.captureFailed(error.message))}</p>`);
-      return;
     } finally {
       video.currentTime = t0; video.muted = wasMuted;
       if (!wasPaused) video.play();
@@ -151,7 +156,7 @@
         guides: guides.map((guide) => ({
           id: guide.id, phrase: guide.phrase, what_to_show: guide.what_to_show,
           guide_text: guide.guide_text,
-          candidates: SLOTS.map((slot) => ({
+          candidates: SLOTS.filter((slot) => shots[guide.id][slot]).map((slot) => ({
             slot, data: shots[guide.id][slot].split(",")[1],   // dataURL → base64 본문
           })),
         })),
@@ -159,7 +164,13 @@
       if (answer?.ok) aiPicks = answer.picks || {};
       else aiNotice = answer?.error || L.autoPickFailed;
     }
-    const checkedSlot = (guideId) => aiPicks[guideId]?.slot || "center";
+    const aliveSlots = (guideId) => SLOTS.filter((slot) => shots[guideId][slot]);
+    const checkedSlot = (guideId) => {
+      const ai = aiPicks[guideId]?.slot;
+      if (ai && (ai === "none" || shots[guideId][ai])) return ai;
+      const alive = aliveSlots(guideId);
+      return alive.includes("center") ? "center" : (alive[0] || "none");
+    };
 
     // 선택 UI
     const cards = guides.map((guide) => `
@@ -167,9 +178,10 @@
         <p><b>${esc(guide.id)}</b> · ${esc(guide.phrase)}<br><small>${esc(guide.guide_text)}</small>${
           aiPicks[guide.id]?.reason ? `<br><small class="cn-ai">✨ ${esc(aiPicks[guide.id].reason)}</small>` : ""}</p>
         <div class="cn-row">
-          ${SLOTS.map((slot) => `
+          ${SLOTS.map((slot) => shots[guide.id][slot] ? `
             <label><input type="radio" name="${esc(guide.id)}" value="${slot}" ${slot === checkedSlot(guide.id) ? "checked" : ""}>
-            <img src="${shots[guide.id][slot]}"></label>`).join("")}
+            <img src="${shots[guide.id][slot]}"></label>` : `
+            <span class="cn-fail">${L.slotFailed}</span>`).join("")}
           <label class="cn-none"><input type="radio" name="${esc(guide.id)}" value="none" ${checkedSlot(guide.id) === "none" ? "checked" : ""}><span>${L.unfit}</span></label>
         </div>
       </section>`).join("");

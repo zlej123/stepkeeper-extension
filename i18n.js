@@ -2,6 +2,7 @@
 // (앱의 Localizable.xcstrings, 코어의 template.<lang>.md와 같은 역할 — 폴백은 영어)
 const STEPKEEPER_STRINGS = {
   en: {
+    slotFailed: "capture<br>failed",
     optRemember: "Remember key on this device",
     optRememberHint: "Off = the key lives only until you close the browser. It is never synced to other devices either way.",
     optServerDenied: "Permission for that server was declined — server URL not saved.",
@@ -43,6 +44,7 @@ const STEPKEEPER_STRINGS = {
     noPlayer: "Couldn't find the player. Play the video once and try again.",
   },
   ko: {
+    slotFailed: "캡처<br>실패",
     optRemember: "키를 이 기기에 저장",
     optRememberHint: "끄면 브라우저를 닫을 때 키가 지워집니다. 어느 쪽이든 다른 기기로 동기화되지 않습니다.",
     optServerDenied: "해당 서버 접근 권한이 거부됐습니다 — 서버 URL을 저장하지 않았습니다.",
@@ -84,6 +86,7 @@ const STEPKEEPER_STRINGS = {
     noPlayer: "플레이어를 찾지 못했습니다. 영상을 한 번 재생해 주세요.",
   },
   ja: {
+    slotFailed: "取得<br>失敗",
     optRemember: "キーをこの端末に保存",
     optRememberHint: "オフにするとブラウザを閉じたときにキーが消えます。どちらの場合も他の端末には同期されません。",
     optServerDenied: "サーバーへのアクセス許可が拒否されました — サーバー URL は保存されていません。",
