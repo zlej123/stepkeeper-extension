@@ -146,6 +146,19 @@ async function loadKey() {
   return (await chrome.storage.local.get("apiKey")).apiKey || "";
 }
 
+/// 고위험 도메인 감지 — 코어 contract.py와 같은 자산(highrisk.json)으로 같은 판정 (리뷰 3차 P1-3).
+/// 직접 Gemini 경로는 계약 검증을 거치지 않으므로 여기서 로컬로 감지한다.
+async function detectHighRisk(analysis) {
+  try {
+    const asset = JSON.parse(await loadAsset("assets/skill-core/engine/highrisk.json"));
+    const blob = [analysis.title, analysis.category, analysis.summary]
+      .filter(Boolean).join(" ").toLowerCase();
+    return asset.keywords.filter((kw) => blob.includes(kw.toLowerCase()));
+  } catch {
+    return [];   // 자산 문제로 고지가 빠질 수는 있어도 분석을 막지는 않는다
+  }
+}
+
 async function loadSettings() {
   const settings = Object.assign(
     { language: stepkeeperDefaultLanguage(), model: "gemini-flash-lite-latest",
@@ -177,7 +190,9 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     const analysis = settings.serverUrl
       ? await analyzeViaServer(message.payload, settings)
       : await analyzeDirect(message.payload, settings);
-    sendResponse({ ok: true, analysis, language: settings.language, autoPick: settings.autoPick });
+    sendResponse({ ok: true, analysis, language: settings.language,
+                   autoPick: settings.autoPick,
+                   highRisk: await detectHighRisk(analysis) });
   })().catch((error) => sendResponse({ ok: false, error: error.message }));
   return true; // async sendResponse
 });

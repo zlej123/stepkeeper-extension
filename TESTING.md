@@ -27,6 +27,10 @@
 - [ ] "문서 만들기" → `stepkeeper-<영상ID>.zip` 하나 다운로드
 - [ ] zip 안에 document.md·선택한 vg-*.jpg·analysis.json·manifest.json이 있고, 풀어서 md를 열면 이미지가 보임
 
+## 안전 고지
+- [ ] 전기 배선/응급처치류 영상 분석 → 픽커 상단에 ⚠️ 주황 고지, zip의 manifest.json에 high_risk 배열
+- [ ] 일반 요리 영상 → 고지 없음, manifest.json high_risk가 빈 배열
+
 ## 출력 언어 (옵션의 language 설정을 따라감)
 - [ ] 새 프로필에 설치 → 옵션 화면이 **브라우저 언어**로 뜸 (한국어 크롬이면 한국어, 영어면 영어)
 - [ ] 옵션의 출력 언어를 바꾸면 **저장 전에** 화면 문구가 즉시 바뀜

@@ -187,6 +187,7 @@
       </section>`).join("");
     ui(`
       <p><b>${esc(analysis.title)}</b> — ${L.pickPrompt}</p>
+      ${(reply.highRisk || []).length ? `<p class="cn-risk">⚠️ ${L.highRisk}</p>` : ""}
       ${Object.keys(aiPicks).length ? `<p class="cn-ai">✨ ${L.autoPicked}</p>` : ""}
       ${aiNotice ? `<p class="cn-err">${esc(aiNotice)}</p>` : ""}
       ${cards}
@@ -224,6 +225,7 @@
         profile: analysis._profile || "",
         language: reply.language || analysis._output_language || "",
         contract_version: analysis._contract_version || "",
+        high_risk: reply.highRisk || [],
         generated_at: new Date().toISOString(),
         picks,
       }, null, 2) });
