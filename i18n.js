@@ -2,6 +2,7 @@
 // (앱의 Localizable.xcstrings, 코어의 template.<lang>.md와 같은 역할 — 폴백은 영어)
 const STEPKEEPER_STRINGS = {
   en: {
+    close: "Close",
     highRisk: "This looks like a safety-critical topic (medical, electrical, gas…). Treat the document as reference only — don't follow it without expert guidance.",
     slotFailed: "capture<br>failed",
     optRemember: "Remember key on this device",
@@ -45,6 +46,7 @@ const STEPKEEPER_STRINGS = {
     noPlayer: "Couldn't find the player. Play the video once and try again.",
   },
   ko: {
+    close: "닫기",
     highRisk: "안전이 걸린 주제로 보입니다 (의료·전기·가스 등). 문서는 참고용입니다 — 전문가 확인 없이 따라 하지 마세요.",
     slotFailed: "캡처<br>실패",
     optRemember: "키를 이 기기에 저장",
@@ -88,6 +90,7 @@ const STEPKEEPER_STRINGS = {
     noPlayer: "플레이어를 찾지 못했습니다. 영상을 한 번 재생해 주세요.",
   },
   ja: {
+    close: "閉じる",
     highRisk: "安全に関わるテーマのようです（医療・電気・ガスなど）。この文書は参考用です — 専門家の確認なしに実行しないでください。",
     slotFailed: "取得<br>失敗",
     optRemember: "キーをこの端末に保存",

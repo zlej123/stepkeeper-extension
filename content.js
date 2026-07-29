@@ -98,7 +98,9 @@
       panel.id = "stepkeeper-panel";
       document.body.appendChild(panel);
     }
-    panel.innerHTML = `<div class="cn-head"><b>stepkeeper</b><button id="cn-close">✕</button></div>${html}`;
+    panel.setAttribute("role", "dialog");
+    panel.setAttribute("aria-label", "stepkeeper");
+    panel.innerHTML = `<div class="cn-head"><b>stepkeeper</b><button id="cn-close" aria-label="${L.close}">✕</button></div>${html}`;
     panel.querySelector("#cn-close").onclick = () => panel.remove() || (panel = null);
   }
 
@@ -179,10 +181,10 @@
           aiPicks[guide.id]?.reason ? `<br><small class="cn-ai">✨ ${esc(aiPicks[guide.id].reason)}</small>` : ""}</p>
         <div class="cn-row">
           ${SLOTS.map((slot) => shots[guide.id][slot] ? `
-            <label><input type="radio" name="${esc(guide.id)}" value="${slot}" ${slot === checkedSlot(guide.id) ? "checked" : ""}>
-            <img src="${shots[guide.id][slot]}"></label>` : `
+            <label><input type="radio" name="${esc(guide.id)}" value="${slot}" ${slot === checkedSlot(guide.id) ? "checked" : ""} aria-label="${esc(guide.phrase)} · ${slot}">
+            <img src="${shots[guide.id][slot]}" alt=""></label>` : `
             <span class="cn-fail">${L.slotFailed}</span>`).join("")}
-          <label class="cn-none"><input type="radio" name="${esc(guide.id)}" value="none" ${checkedSlot(guide.id) === "none" ? "checked" : ""}><span>${L.unfit}</span></label>
+          <label class="cn-none"><input type="radio" name="${esc(guide.id)}" value="none" ${checkedSlot(guide.id) === "none" ? "checked" : ""} aria-label="${esc(guide.phrase)} · ${L.unfit.replace("<br>", " ")}"><span>${L.unfit}</span></label>
         </div>
       </section>`).join("");
     ui(`

@@ -27,6 +27,11 @@
 - [ ] "문서 만들기" → `stepkeeper-<영상ID>.zip` 하나 다운로드
 - [ ] zip 안에 document.md·선택한 vg-*.jpg·analysis.json·manifest.json이 있고, 풀어서 md를 열면 이미지가 보임
 
+## 접근성·레이아웃
+- [ ] 픽커에서 Tab → 선택된 썸네일에 파란 포커스 링, 화살표 키로 후보 이동·선택 (마우스 없이 완주 가능)
+- [ ] VoiceOver/스크린리더가 각 후보를 "문구 · 슬롯"으로 읽음
+- [ ] 브라우저 창을 500px 이하로 좁혀도 패널이 잘리지 않고 축소됨
+
 ## 안전 고지
 - [ ] 전기 배선/응급처치류 영상 분석 → 픽커 상단에 ⚠️ 주황 고지, zip의 manifest.json에 high_risk 배열
 - [ ] 일반 요리 영상 → 고지 없음, manifest.json high_risk가 빈 배열
