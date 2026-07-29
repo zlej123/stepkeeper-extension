@@ -4,10 +4,13 @@
 
 const stepkeeperHms = (sec) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`;
 
-function stepkeeperBuildMarkdown(vid, analysis, picks, L) {
+function stepkeeperBuildMarkdown(vid, analysis, picks, L, highRisk = false) {
   const lines = [];
   const icon = analysis._profile === "recipe" ? "🍳" : "📋";
-  lines.push(`## ${icon} ${analysis.title}`, "", analysis.summary || "", "");
+  lines.push(`## ${icon} ${analysis.title}`);
+  // 코어 파리티: 안전 고지는 저장물 자체의 제목 바로 아래 (문구는 템플릿과 바이트 동일)
+  if (highRisk) lines.push("", L.docHighRisk);
+  lines.push("", analysis.summary || "", "");
   // 코어 파리티: category 블록은 generic 템플릿에만 있고, falsy여도 빈 줄로 남는다
   // (템플릿의 인라인 섹션 렌더 결과 — recipe 템플릿에는 이 줄 자체가 없다)
   if (analysis._profile !== "recipe") {

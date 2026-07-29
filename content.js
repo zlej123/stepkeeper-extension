@@ -87,8 +87,9 @@
   }
 
   // ---- 마크다운 조립은 doc.js(stepkeeperBuildMarkdown) — 코어 골든과 바이트 대조된다
+  let docHighRisk = false;   // 분석 응답의 highRisk (run()에서 설정)
   function buildMarkdown(vid, analysis, picks) {
-    return stepkeeperBuildMarkdown(vid, analysis, picks, L);
+    return stepkeeperBuildMarkdown(vid, analysis, picks, L, docHighRisk);
   }
 
   // ---- UI -------------------------------------------------------------------
@@ -122,6 +123,7 @@
     analysis._profile ||= profile;
     // 분석 응답이 알려준 출력 언어로 패널·문서 문구를 맞춘다 (설정의 language)
     L = stepkeeperStrings(reply.language || analysis._output_language);
+    docHighRisk = (reply.highRisk || []).length > 0;
 
     // 후보 프레임 캡처 (음소거·일시정지 후 원위치 복원)
     const wasPaused = video.paused, wasMuted = video.muted, t0 = video.currentTime;

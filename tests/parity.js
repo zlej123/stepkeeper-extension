@@ -34,7 +34,13 @@ for (const name of cases) {
   const picks = {};
   for (const guideId of Object.keys(caseSpec.image_refs || {})) picks[guideId] = "center";
   const L = stepkeeperStrings(analysis._output_language);
-  const actual = stepkeeperBuildMarkdown(caseSpec.video_id, analysis, picks, L);
+  // 고위험 감지도 파리티 대상 — bg.js와 같은 자산으로 같은 판정
+  const riskAsset = JSON.parse(fs.readFileSync(
+    path.join(__dirname, "..", "assets", "skill-core", "engine", "highrisk.json"), "utf8"));
+  const blob = [analysis.title, analysis.category, analysis.summary]
+    .filter(Boolean).join(" ").toLowerCase();
+  const highRisk = riskAsset.keywords.some((kw) => blob.includes(kw.toLowerCase()));
+  const actual = stepkeeperBuildMarkdown(caseSpec.video_id, analysis, picks, L, highRisk);
   if (actual === expected) {
     console.log("PASS", name);
   } else {
