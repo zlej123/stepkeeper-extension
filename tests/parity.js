@@ -29,7 +29,12 @@ for (const name of cases) {
   const dir = path.join(goldenRoot, name);
   const analysis = JSON.parse(fs.readFileSync(path.join(dir, "analysis.json"), "utf8"));
   const caseSpec = JSON.parse(fs.readFileSync(path.join(dir, "case.json"), "utf8"));
-  const expected = fs.readFileSync(path.join(dir, "expected.md"), "utf8");
+  // apple 골든은 자사 제품 브랜드(stepkipper)가 입혀져 있다 (scripts/apple_brand.py) —
+  // 문서 문자열 파리티만 검증하면 되므로 비교 전에 코어 표기로 되돌린다
+  const expected = fs.readFileSync(path.join(dir, "expected.md"), "utf8")
+    .replaceAll("kept with stepkipper", "kept with stepkeeper")
+    .replaceAll("stepkipper로 생성", "stepkeeper로 생성")
+    .replaceAll("stepkipper で作成", "stepkeeper で作成");
   // 코어의 image_refs(guide→파일명)를 확장의 picks(guide→슬롯)로 — 값은 아무 비-none이면 된다
   const picks = {};
   for (const guideId of Object.keys(caseSpec.image_refs || {})) picks[guideId] = "center";
