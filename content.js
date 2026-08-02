@@ -38,26 +38,6 @@
     return video;
   }
 
-  // 후보는 스텝 경계가 아니라 center 주변에서 뽑는다 (코어 CANDIDATE_SPREAD와 동일 규칙).
-  // 긴 스텝에서 경계 후보는 다른 주제를 찍는다 — 실측: 19초 스텝에서 18·31·39초가 잡혔고
-  // 가이드가 요구한 26~29초 동작이 세 장 어디에도 없었다.
-  const CANDIDATE_SPREAD = 4;
-
-  function candidateTimes(step, guide, duration) {
-    const center = guide.best_visual_timestamp;
-    const last = Math.max(0, duration - 1);
-    const length = step
-      ? Math.max(0, (step.t_end ?? center) - (step.t_start ?? center)) : null;
-    const spread = length === null
-      ? CANDIDATE_SPREAD
-      : Math.max(1, Math.min(CANDIDATE_SPREAD, Math.floor(length / 4)));
-    return {
-      before: Math.max(0, center - spread),
-      center,
-      after: Math.min(last, center + spread),
-    };
-  }
-
   function seek(video, t) {
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => reject(new Error(`seek 시간 초과 (${t}s)`)), 8000);
@@ -135,7 +115,7 @@
       for (const guide of guides) {
         ui(`<p>${L.capturing(guide.id, guides.length)}</p>`);
         shots[guide.id] = {};
-        const times = candidateTimes(steps[guide.step_id], guide, duration);
+        const times = stepkeeperCandidateTimes(steps[guide.step_id], guide, duration);
         for (const slot of SLOTS) {
           // 슬롯 단위 격리 (앱과 동일): 한 후보의 seek/캡처 실패가 전체 흐름을 중단시키면
           // 제품이 약속한 "부적합 → 타임스탬프 링크" 폴백까지 갈 수 없다 (리뷰 3차 P1)

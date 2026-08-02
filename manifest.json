@@ -26,6 +26,7 @@
         "i18n.js",
         "zip.js",
         "doc.js",
+        "candidate-times.js",
         "content.js"
       ],
       "css": [
