@@ -115,40 +115,41 @@ async function readGeminiJSON(response, language) {
 
 /// 코어 autopick.py 포팅 — 가이드별 후보 3장을 Gemini vision이 보고 하나(또는 none)를 고른다.
 /// 앱과 같은 안전 계약: 빠뜨린 가이드·스키마 밖 슬롯·묻지 않은 가이드는 전부 none(링크 폴백).
+/// 가이드별 **독립 호출** (외부 리뷰 P2-4): 묶음 호출에서는 앞 가이드의 장면이 뒤 가이드
+/// 근거에 새어 들어왔다 (실측 ㄱ20). 이미지 수는 같아 토큰 총량 동일, 요청 횟수만 증가.
 async function autoPickDirect(guides, settings) {
-  const parts = [{ text: `${STEPKEEPER_AUTOPICK_PROMPT}\nreason은 ${settings.language} 언어로 작성하세요.` }];
-  const asked = [];
+  const valid = new Set(["before", "center", "after", "none"]);
+  const picks = {};
   for (const guide of guides) {
     if ((guide.candidates || []).length !== 3) continue;   // 부분 실패 가이드는 사람이 고른다
-    asked.push(guide.id);
-    parts.push({ text: `[${guide.id}] 표현: ${guide.phrase}\n보여야 할 것: ${guide.what_to_show}\n가이드: ${guide.guide_text}` });
+    const parts = [
+      { text: `${STEPKEEPER_AUTOPICK_PROMPT}\nreason은 ${settings.language} 언어로 작성하세요.` },
+      { text: `[${guide.id}] 표현: ${guide.phrase}\n보여야 할 것: ${guide.what_to_show}\n가이드: ${guide.guide_text}` },
+    ];
     for (const candidate of guide.candidates) {
       parts.push({ text: `${guide.id} 후보 ${candidate.slot}:` });
       parts.push({ inline_data: { mime_type: "image/jpeg", data: candidate.data } });
     }
+    const response = await fetch(`${GEMINI}/${settings.model}:generateContent`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-goog-api-key": settings.apiKey },
+      body: JSON.stringify({
+        contents: [{ parts }],
+        generationConfig: {
+          response_mime_type: "application/json",
+          response_json_schema: STEPKEEPER_AUTOPICK_SCHEMA,
+          temperature: 0.2,
+        },
+      }),
+    });
+    const object = await readGeminiJSON(response, settings.language);
+    for (const item of object.picks || []) {
+      // 다른 가이드를 참칭하는 항목은 무시 — 이 요청은 이 가이드만 물었다
+      if (item.guide_id !== guide.id || !valid.has(item.slot)) continue;
+      picks[guide.id] = { slot: item.slot, reason: item.reason || "" };
+    }
+    picks[guide.id] ||= { slot: "none", reason: "" };
   }
-  if (!asked.length) return {};
-
-  const response = await fetch(`${GEMINI}/${settings.model}:generateContent`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "x-goog-api-key": settings.apiKey },
-    body: JSON.stringify({
-      contents: [{ parts }],
-      generationConfig: {
-        response_mime_type: "application/json",
-        response_json_schema: STEPKEEPER_AUTOPICK_SCHEMA,
-        temperature: 0.2,
-      },
-    }),
-  });
-  const object = await readGeminiJSON(response, settings.language);
-  const valid = new Set(["before", "center", "after", "none"]);
-  const picks = {};
-  for (const item of object.picks || []) {
-    if (!asked.includes(item.guide_id) || !valid.has(item.slot)) continue;
-    picks[item.guide_id] = { slot: item.slot, reason: item.reason || "" };
-  }
-  for (const id of asked) picks[id] ||= { slot: "none", reason: "" };
   return picks;
 }
 

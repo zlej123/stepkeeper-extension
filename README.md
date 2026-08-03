@@ -8,6 +8,10 @@ The Chrome extension for [stepkeeper](https://github.com/zlej123/stepkeeper). On
 
 No server required — you bring your own Gemini key. Nothing is downloaded from YouTube, so there is no yt-dlp and no bot-blocking problem.
 
+## Install
+
+**[Chrome Web Store](https://chromewebstore.google.com/detail/ckgcfpdlfihclbgmigfnniepkeilcgbp)** — one-click install (the store build may trail this repo while updates are in review).
+
 ## Install (developer mode)
 
 1. Clone this repo
