@@ -149,6 +149,34 @@ async function autoPickDirect(guides, settings) {
       picks[guide.id] = { slot: item.slot, reason: item.reason || "" };
     }
     picks[guide.id] ||= { slot: "none", reason: "" };
+
+    // 자기 검증 패스: 고른 한 장만 다시 보여 "정말 보이는가"를 묻는다 —
+    // 후보 비교의 "그중 제일 낫다" 편향을 끊는다 (실측 #6: 렌치가 어느
+    // 후보에도 없는데 center를 골랐다).
+    const picked = picks[guide.id];
+    if (picked.slot !== "none") {
+      const frame = guide.candidates.find((c) => c.slot === picked.slot);
+      const verifyResponse = await fetch(`${GEMINI}/${settings.model}:generateContent`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-goog-api-key": settings.apiKey },
+        body: JSON.stringify({
+          contents: [{ parts: [
+            { text: `${STEPKEEPER_AUTOPICK_VERIFY_PROMPT}\nreason은 ${settings.language} 언어로 작성하세요.` },
+            { text: `보여야 할 것: ${guide.what_to_show}` },
+            { inline_data: { mime_type: "image/jpeg", data: frame.data } },
+          ] }],
+          generationConfig: {
+            response_mime_type: "application/json",
+            response_json_schema: STEPKEEPER_AUTOPICK_VERIFY_SCHEMA,
+            temperature: 0.2,
+          },
+        }),
+      });
+      const verdict = await readGeminiJSON(verifyResponse, settings.language);
+      if (!verdict.shows) {
+        picks[guide.id] = { slot: "none", reason: verdict.reason || "" };
+      }
+    }
   }
   return picks;
 }
